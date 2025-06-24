@@ -1,71 +1,132 @@
-<<<<<<< HEAD
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# TANDUR - Tata Lahan dan Data Urun Rancang
+Sistem Informasi Geografis Pertanian Berbasis Web untuk Desa Sabdodadi, Bantul
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📌 Deskripsi
 
-## About Laravel
+**TANDUR** adalah sebuah proyek Sistem Informasi Geografis (SIG) berbasis web yang dibangun dengan Laravel dan PostgreSQL (PostGIS) untuk membantu pengelolaan lahan, data pertanian, dan sistem informasi petani di Desa Sabdodadi. Proyek ini dibuat sebagai latihan penerapan teknologi spasial dan pengembangan web modern untuk pertanian.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🎯 Tujuan dan Manfaat
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* Memberikan **visualisasi spasial** lahan, tanaman, dan sistem perairan.
+* Menyediakan **informasi statistik terkini** seputar pertanian desa.
+* Memungkinkan **pendaftaran petani** dan pengelolaan musim tanam.
+* Menjadi **platform kolaboratif** antara petani dan pengelola desa.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🧭 Alur Penggunaan TANDUR
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+1. **Pengunjung** membuka halaman utama dengan animasi dan informasi dasar.
+2. **Petani** dapat mendaftar dan login untuk mengakses dashboard.
+3. Di **dashboard**, pengguna melihat peta interaktif:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+   * Polygon: lahan pertanian
+   * Polyline: jalur perairan
+   * Point: jenis tanaman
+4. Pengguna bisa **menambah, mengedit, atau menghapus** data spasial dan atribut.
+5. Terdapat juga fitur **kalender tanam**, cuaca real-time, dan statistik pertanian.
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🗂️ Fitur Utama
 
-### Premium Partners
+### 🌾 1. Manajemen Lahan Pertanian (Polygon)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+* Tambah/edit bentuk dan data lahan
+* Hitung luas otomatis (dalam hektar)
 
-## Contributing
+### 💧 2. Sistem Perairan (Polyline)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+* Catat jalur irigasi yang aktif
 
-## Code of Conduct
+### 🌱 3. Jenis Tanaman (Point)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+* Data jenis tanaman yang ditanam per lokasi
 
-## Security Vulnerabilities
+### 📊 4. Dashboard Statistik
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+* Menampilkan jumlah RT, lahan, petani, tanaman, dan perairan
 
-## License
+### 👨‍🌾 5. Manajemen Petani
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-=======
-# TANDUR
-TANDUR (Tata Lahan dan Data Urun Rancang Sabdodadi)
->>>>>>> 4f1efe9c46ce1fb934dabca5bb44cca1d2bf654f
+* Registrasi & login petani
+* Setiap petani punya data musim tanam sendiri
+
+### 🌤️ 6. Cuaca Real-Time
+
+* Terintegrasi dengan OpenWeather API
+
+### 🛰️ 7. Layer Tambahan
+
+* NDVI & Citra Satelit
+* Batas Administrasi Sabdodadi
+
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+| Komponen    | Teknologi                       |
+| ----------- | ------------------------------- |
+| Backend     | Laravel 10.x                    |
+| Frontend    | Blade, Tailwind CSS, Leaflet.js |
+| Database    | PostgreSQL + PostGIS            |
+| Geo Tools   | GeoJSON, WKT, Terraformer       |
+| Cuaca API   | OpenWeatherMap                  |
+| UI Animasi  | LottiePlayer, AOS Animation     |
+| File Upload | Laravel Storage (local image)   |
+
+---
+
+## 🚀 Instalasi & Setup Lokal
+
+### 1. Clone Repo
+
+```bash
+git clone https://github.com/lilmatcxa/TANDUR_Zidni-Anasa-Ni-Da-i_518936.git
+cd TANDUR_Zidni-Anasa-Ni-Da-i_518936
+```
+
+### 2. Install Dependency
+
+```bash
+composer install
+npm install && npm run dev
+```
+
+### 3. Setup .env
+
+Salin file `.env.example` ke `.env` dan sesuaikan:
+
+```env
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5432
+DB_DATABASE=AgriMap
+DB_USERNAME=postgres
+DB_PASSWORD=admin
+OPENWEATHER_API_KEY= (sesuai kode log in)
+```
+
+### 4. Migrasi Database
+
+```bash
+php artisan migrate
+```
+
+### 5. Jalankan Aplikasi
+
+```bash
+php artisan serve
+```
+
+---
+
+## 🙌 Kontribusi
+
+Proyek ini dibuat sebagai bagian dari responsi mata kuliah Praktikum Pemrograman Geospasial: Web Lanjut SIG.
+
+---
+
+Terima kasih telah menggunakan **TANDUR** 🌿
