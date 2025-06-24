@@ -5,7 +5,7 @@
         <div class="highlighted-title mx-auto mb-5">
             <h2 class="text-center fw-bold mb-0" style="font-size: 1.75rem; color: #15B392;">
                 📍 Daftar Data Pertanian Wilayah Sabdodadi, Bantul —
-                <span class="text-tanaman">Jenis Tanaman</span>,
+                <span class="text-tanaman">Fasilitas dan Detail Tanaman</span>,
                 <span class="text-perairan">Perairan</span>, dan
                 <span class="text-lahan">Lahan Pertanian</span>
             </h2>
@@ -13,8 +13,8 @@
 
         {{-- POINTS --}}
         <div class="card shadow-sm mb-5 border-0 rounded-4">
-            <div class="card-header text-dark rounded-top-4" style="background-color: #D2FF72;">
-                <h4 class="mb-0">🌱 Jenis Tanaman</h4>
+            <div class="card-header text-white rounded-top-4" style="background-color: #2cdc81;">
+                <h4 class="mb-0">🌱 Fasilitas dan Detail Tanaman</h4>
             </div>
             <div class="card-body table-responsive">
                 <table class="table table-striped table-hover table-bordered align-middle" id="pointstable">
@@ -148,22 +148,22 @@
         }
 
         .text-tanaman {
-            color: #54C392;
+            color: #36b98d;
             font-weight: 700;
         }
 
         .text-perairan {
-            color: #73EC8B;
+            color: #096589;
             font-weight: 700;
         }
 
         .text-lahan {
-            color: #15B392;
+            color: #107266;
             font-weight: 700;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(216, 241, 227, 0.833);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
