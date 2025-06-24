@@ -1,3 +1,5 @@
+![Salinan dari Poster Ajakan Membaca Buku Ilustratif Biru dan Putih](https://github.com/user-attachments/assets/99e17dfe-d795-4d08-9ef9-816c59df8096)
+
 # TANDUR - Tata Lahan dan Data Urun Rancang
 Sistem Informasi Geografis Pertanian Berbasis Web untuk Desa Sabdodadi, Bantul
 
