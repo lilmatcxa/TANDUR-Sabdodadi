@@ -19,15 +19,45 @@
             width: 100%;
             height: calc(100vh - 56px);
         }
+    </style>
+    <style>
+        .planting-section {
+            background-image: url("{{ asset('dipakai/bg2.gif') }}");
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
 
-        /* Geser tombol fullscreen ke kanan tengah */
-        .leaflet-control-fullscreen {
-            top: 50% !important;
-            right: 10px !important;
-            left: auto !important;
-            transform: translateY(-50%);
+        .planting-section table {
+            background-color: rgba(100, 238, 172, 0.9);
+            /* Supaya tabel tetap kebaca */
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table td,
+        .table th {
+            background-color: rgba(255, 255, 255, 0.6) !important;
         }
     </style>
+    <style>
+        .judul-tanam-standout {
+            background: rgba(255, 255, 255, 0.7);
+            /* latar semi transparan */
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            font-weight: 800;
+            color: #2d3e2f;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -45,7 +75,86 @@
         </div>
     @endif
 
+    @if (isset($notifications) && count($notifications))
+        <div class="container mt-4">
+            <div class="alert alert-warning shadow-sm">
+                <ul class="mb-0">
+                    @foreach ($notifications as $note)
+                        <li>{!! $note !!}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
+
     <div id="map"></div>
+
+    <div class="container mt-5">
+        <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+            <div class="card-header bg-success text-white d-flex align-items-center"
+                style="background: linear-gradient(135deg, #a8e063, #56ab2f);">
+                <i class="bi bi-calendar-week-fill me-2 fs-5"></i>
+                <h5 class="mb-0">Kalender Tanam</h5>
+            </div>
+            <div class="card-body bg-light">
+                <!-- Form input -->
+                <form action="{{ route('planting.store') }}" method="POST" class="mb-4">
+                    @csrf
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-4">
+                            <input type="text" name="plant_name" class="form-control shadow-sm border-0 rounded-3"
+                                placeholder="🌱 Nama Tanaman" required>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="date" name="planting_date" class="form-control shadow-sm border-0 rounded-3"
+                                required>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="date" name="harvest_date" class="form-control shadow-sm border-0 rounded-3">
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-success w-100 shadow-sm rounded-3" type="submit">
+                                + Tambah
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Jadwal Tanam dan Panen -->
+                <div class="container mt-4 planting-section">
+                    <h4 class="fw-bold mb-3 judul-tanam-standout">📅 Jadwal Tanam dan Panen</h4>
+                    <table class="table table-striped shadow-sm rounded-3">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Tanaman</th>
+                                <th>Tanggal Tanam</th>
+                                <th>Tanggal Panen</th>
+                                <th>Aksi</th> <!-- tambahkan kolom ini -->
+
+                            </tr>
+                        </thead>
+                        <tbody id="planting-body">
+                            <!-- Data diisi lewat JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @if (!empty($notifications))
+        <div class="alert alert-warning alert-dismissible fade show m-3 shadow" role="alert">
+            <ul class="mb-0">
+                @foreach ($notifications as $note)
+                    <li>{!! $note !!}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+
 
     <!-- Legend NDVI sesuai warna citra -->
     <div id="ndvi-legend"
@@ -122,16 +231,48 @@
         </div>
     </div>
 
+    <!-- Modal Edit -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="edit-form" class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title text-white" id="editModalLabel">Edit Jadwal Tanam</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body bg-light">
+                    <input type="hidden" id="edit-id">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Tanaman</label>
+                        <input type="text" class="form-control" id="edit-plant-name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tanggal Tanam</label>
+                        <input type="date" class="form-control" id="edit-planting-date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tanggal Panen</label>
+                        <input type="date" class="form-control" id="edit-harvest-date">
+                    </div>
+                </div>
+                <div class="modal-footer bg-white">
+                    <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <!-- Modal Create Point -->
-    <div class="modal fade" id="createpointModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="createpointModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
-            <form method="POST" action="{{ route('points.store') }}" enctype="multipart/form-data" class="modal-content"
-                style="border: 2px solid #54C392;">
+            <form method="POST" action="{{ route('points.store') }}" enctype="multipart/form-data"
+                class="modal-content" style="border: 2px solid #54C392;">
                 @csrf
                 <div class="modal-header" style="background-color: #15B392;">
                     <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Tambah Titik (Point)</h1>
-                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body" style="background-color: #D2FF72;">
                     <div class="mb-3">
@@ -275,6 +416,98 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
+        function loadPlantingSchedule() {
+            fetch("/api/plantings")
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = $('#planting-body');
+                    tbody.empty();
+
+                    data.forEach(item => {
+                        const row = `
+                        <tr id="row-${item.id}">
+                            <td>${item.plant_name}</td>
+                            <td>${item.planting_date}</td>
+                            <td>${item.harvest_date ?? '-'}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning me-1"
+                                    onclick="openEditModal(${item.id}, '${item.plant_name}', '${item.planting_date}', '${item.harvest_date ?? ''}')">
+                                    Edit
+                                </button>
+                                <button class="btn btn-sm btn-danger"
+                                    onclick="deletePlanting(${item.id})">
+                                    Hapus
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                        tbody.append(row);
+                    });
+                });
+        }
+
+        // ⏬ Tampilkan modal & isi data edit
+        function openEditModal(id, name, planting, harvest) {
+            $('#edit-id').val(id);
+            $('#edit-plant-name').val(name);
+            $('#edit-planting-date').val(planting);
+            $('#edit-harvest-date').val(harvest);
+            $('#editModal').modal('show');
+        }
+
+        // ⏬ Submit perubahan Edit
+        $('#edit-form').on('submit', function(e) {
+            e.preventDefault();
+            const id = $('#edit-id').val();
+            const data = {
+                plant_name: $('#edit-plant-name').val(),
+                planting_date: $('#edit-planting-date').val(),
+                harvest_date: $('#edit-harvest-date').val(),
+            };
+
+            fetch(`/planting-schedule/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(res => {
+                    if (res.ok) {
+                        $('#editModal').modal('hide');
+                        loadPlantingSchedule();
+                    } else {
+                        alert('Gagal mengubah data!');
+                    }
+                });
+        });
+
+        // ⏬ Hapus data
+        function deletePlanting(id) {
+            if (confirm('Yakin ingin menghapus data ini?')) {
+                fetch(`/planting-schedule/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    },
+                }).then(res => {
+                    if (res.ok) {
+                        $(`#row-${id}`).fadeOut(300, function() {
+                            $(this).remove();
+                        });
+                    } else {
+                        alert('Gagal menghapus data!');
+                    }
+                });
+            }
+        }
+
+        loadPlantingSchedule();
+    </script>
+
+
+    <script>
         function loadWeather(lat, lon) {
             fetch(`/weather/${lat}/${lon}`)
                 .then(response => response.json())
@@ -300,7 +533,6 @@
         // Lokasi: Sabdodadi
         loadWeather(-7.8910983, 110.3556490);
     </script>
-
 
     <script>
         let batasLayer;

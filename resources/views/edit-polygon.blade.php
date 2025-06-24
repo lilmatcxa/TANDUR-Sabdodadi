@@ -33,47 +33,46 @@
 
     <div id="map"></div>
 
-    <!-- Modal Edit Polygon-->
-    <div class="modal fade" id="editpolygonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal Edit Polygon -->
+    <div class="modal fade" id="editpolygonModal" tabindex="-1" aria-labelledby="editPolygonLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Polygon</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <form method="POST" action="{{ route('polygons.update', $id) }}" enctype="multipart/form-data"
+                class="modal-content" style="border: 2px solid #54C392;">
+                @csrf
+                @method('PATCH')
+                <div class="modal-header" style="background-color: #15B392;">
+                    <h1 class="modal-title fs-5 text-white" id="editPolygonLabel">Edit Polygon</h1>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('polygons.update', $id) }}" enctype="multipart/form-data"
-                    id="form-edit-polygon">
-                    @csrf
-                    @method('PATCH')
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                placeholder="Fill polygon name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="geom_polygon" class="form-label">Geometry</label>
-                            <textarea class="form-control" id="geom_polygon" name="geom_polygon" rows="3"></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="image" class="form-label">Photo</label>
-                            <input type="file" class="form-control" id="image_polygon" name="image"
-                                onchange="document.getElementById('preview-image-polygon').src = window.URL.createObjectURL(this.files[0])">
-                            <img src="" alt="" id="preview-image-polygon" class="img-thumbnail"
-                                width="400">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                </form>
-            </div>
+                <div class="modal-body" style="background-color: #D2FF72;">
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-bold">Nama</label>
+                        <input type="text" class="form-control border-0 shadow-sm" id="name" name="name"
+                            placeholder="Isi nama polygon">
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-bold">Deskripsi</label>
+                        <textarea class="form-control border-0 shadow-sm" id="description" name="description" rows="3"
+                            placeholder="Tuliskan deskripsi..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="geom_polygon" class="form-label fw-bold">Geometry (WKT)</label>
+                        <textarea class="form-control border-0 shadow-sm" id="geom_polygon" name="geom_polygon" rows="3"
+                            placeholder="POLYGON((...))"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image_polygon" class="form-label fw-bold">Foto</label>
+                        <input type="file" class="form-control border-0 shadow-sm" id="image_polygon" name="image"
+                            onchange="document.getElementById('preview-image-polygon').src = window.URL.createObjectURL(this.files[0])">
+                        <img src="" alt="Preview Gambar" id="preview-image-polygon" class="img-thumbnail mt-2"
+                            width="100%" style="max-width: 400px; border: 2px solid #73EC8B;">
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #F8FFF0;">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn" style="background-color: #54C392; color: white;">Simpan</button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection
@@ -89,6 +88,8 @@
     <script src="https://unpkg.com/@terraformer/wkt"></script>
 
     <script>
+        let selectedPolygonLayer = null;
+
         var map = L.map('map').setView([-2.5632749, 500.5021656], 13);
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -113,14 +114,16 @@
                 drawnItems.addLayer(layer);
 
                 layer.on('click', function() {
-                    var geom = Terraformer.geojsonToWKT(feature.geometry);
+                    selectedPolygonLayer = layer; // ⬅️ Simpan layer yang dipilih
+
+                    var geom = Terraformer.geojsonToWKT(layer.toGeoJSON()
+                    .geometry); // ⬅️ Pakai geometry dari layer, bukan feature
                     var props = feature.properties;
 
                     $('#name').val(props.name);
                     $('#description').val(props.description);
                     $('#geom_polygon').val(geom);
 
-                    // Tampilkan preview image jika ada
                     if (props.image) {
                         $('#preview-image-polygon').attr('src', "/storage/images/" + props.image)
                     .show();
@@ -128,13 +131,12 @@
                         $('#preview-image-polygon').attr('src', "").hide();
                     }
 
-
-                    // Set form action with proper PUT route
                     var formAction = "{{ route('polygons.update', ':id') }}".replace(':id', props.id);
                     $('#form-edit-polygon').attr('action', formAction);
 
                     $('#editpolygonModal').modal('show');
                 });
+
             }
         });
 
@@ -149,11 +151,21 @@
 
         // Handle geometry edit
         map.on('draw:edited', function(e) {
-            var layers = e.layers;
-            layers.eachLayer(function(layer) {
-                var geom = Terraformer.geojsonToWKT(layer.toGeoJSON().geometry);
-                $('#geom_polygon').val(geom);
+            e.layers.eachLayer(function(layer) {
+                if (layer instanceof L.Polygon) {
+                    const editedGeom = Terraformer.geojsonToWKT(layer.toGeoJSON().geometry);
+                    $('#geom_polygon').val(editedGeom);
+                }
             });
+        });
+
+
+        // Tambahan WAJIB agar geometry tersimpan saat form disubmit
+        $('#form-edit-polygon').on('submit', function(e) {
+            if (selectedPolygonLayer) {
+                const updatedGeom = Terraformer.geojsonToWKT(selectedPolygonLayer.toGeoJSON().geometry);
+                $('#geom_polygon').val(updatedGeom);
+            }
         });
     </script>
 @endsection

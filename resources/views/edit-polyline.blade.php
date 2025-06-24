@@ -30,44 +30,46 @@
     <div id="map"></div>
 
     <!-- Modal Edit Polyline-->
+    <!-- Modal Edit Polyline-->
     <div class="modal fade" id="editpolylineModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Polyline</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <form method="POST" action="{{ route('polylines.update', $id) }}" enctype="multipart/form-data"
+                id="form-edit-polyline" class="modal-content" style="border: 2px solid #54C392;">
+                @csrf
+                @method('PATCH')
+                <div class="modal-header" style="background-color: #15B392;">
+                    <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Edit Polyline</h1>
+                    <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('polylines.update', $id) }}" enctype="multipart/form-data" id="form-edit-polyline">
-                    @csrf
-                    @method('PATCH')
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name"
-                                placeholder="Fill polyline name">
-                        </div>
-                        <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="geom_polyline" class="form-label">Geometry</label>
-                            <textarea class="form-control" id="geom_polyline" name="geom_polyline" rows="3"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="image" class="form-label">Photo</label>
-                            <input type="file" class="form-control" id="image_polyline" name="image"
-                                onchange="document.getElementById('preview-image-polyline').src = window.URL.createObjectURL(this.files[0])">
-                            <img src="" alt="" id="preview-image-polyline" class="img-thumbnail mt-2"
-                                width="400">
-                        </div>
+                <div class="modal-body" style="background-color: #D2FF72;">
+                    <div class="mb-3">
+                        <label for="name" class="form-label fw-bold">Nama</label>
+                        <input type="text" class="form-control border-0 shadow-sm" id="name" name="name"
+                            placeholder="Isi nama polyline">
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
+                    <div class="mb-3">
+                        <label for="description" class="form-label fw-bold">Deskripsi</label>
+                        <textarea class="form-control border-0 shadow-sm" id="description" name="description" rows="3"
+                            placeholder="Tuliskan deskripsi..."></textarea>
                     </div>
-                </form>
-            </div>
+                    <div class="mb-3">
+                        <label for="geom_polyline" class="form-label fw-bold">Geometry (WKT)</label>
+                        <textarea class="form-control border-0 shadow-sm" id="geom_polyline" name="geom_polyline" rows="3"
+                            placeholder="LINESTRING(...)"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label fw-bold">Foto</label>
+                        <input type="file" class="form-control border-0 shadow-sm" id="image_polyline" name="image"
+                            onchange="document.getElementById('preview-image-polyline').src = window.URL.createObjectURL(this.files[0])">
+                        <img src="" alt="Preview Gambar" id="preview-image-polyline" class="img-thumbnail mt-2"
+                            width="100%" style="max-width: 400px; border: 2px solid #73EC8B;">
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: #F8FFF0;">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="submit" class="btn" style="background-color: #54C392; color: white;">Update</button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection
@@ -137,6 +139,15 @@
                 var geom = Terraformer.geojsonToWKT(layer.toGeoJSON().geometry);
                 $('#geom_polyline').val(geom);
             });
+        });
+
+        // Pastikan geometry terbaru selalu dikirim saat form disubmit
+        $('#form-edit-polyline').on('submit', function() {
+            var lastLayer = drawnItems.getLayers()[0];
+            if (lastLayer) {
+                var geom = Terraformer.geojsonToWKT(lastLayer.toGeoJSON().geometry);
+                $('#geom_polyline').val(geom);
+            }
         });
     </script>
 @endsection

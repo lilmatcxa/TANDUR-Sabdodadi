@@ -7,36 +7,12 @@
         src="https://lottie.host/68f297ab-61ce-477d-94c6-31a31666d208/fXToysjn9c.lottie" background="transparent"
         speed="1" autoplay loop>
     </dotlottie-player>
-
-    <x-slot name="header">
-    <div class="relative overflow-hidden mb-6">
-        <!-- Background Gradient dengan animasi -->
-        <div class="absolute inset-0 bg-gradient-to-r from-[#D2FF72]/30 via-[#73EC8B]/30 to-[#15B392]/30 animate-pulse">
-        </div>
-
-        <!-- Konten utama -->
-        <div class="relative z-10 py-4 px-4 sm:py-6">
-            <div class="bg-white/80 backdrop-blur-md rounded-2xl shadow-lg border border-[#54C392]/30 p-6">
-                <h2
-                    class="text-2xl sm:text-3xl font-extrabold text-[#15B392] leading-tight tracking-wide flex items-center gap-3 animate-fade-in-up">
-                    <span class="text-3xl sm:text-4xl animate-bounce">🌱</span>
-                    <span class="block">TANDUR - Tata Lahan dan Data Urun Rancang Sabdodadi</span>
-                    <span class="text-2xl sm:text-3xl animate-pulse text-[#73EC8B]">🧑‍🌾</span>
-                </h2>
-                <p class="mt-2 text-sm sm:text-base text-[#54C392] italic animate-fade-in">
-                    Platform kolaboratif untuk pengelolaan lahan dan pemetaan partisipatif di Kalurahan Sabdodadi.
-                </p>
-            </div>
-        </div>
-    </div>
-</x-slot>
-
     <div id="splashOverlay"
         class="fixed inset-0 bg-white z-[9998] flex items-center justify-center transition-opacity duration-1000"
         aria-hidden="true">
     </div>
     <div id="mainContent" class="hidden opacity-0 transition-opacity duration-700">
-        <div class="py-12 min-h-screen relative overflow-hidden absolute inset-0 bg-white/40 backdrop-blur-sm z-0"
+       <div class="min-h-screen absolute inset-0 bg-white/40 backdrop-blur-sm z-0"
             style="background-image: url('/dipakai/bg2.gif'); background-size: cover; background-repeat: no-repeat; background-position: center;">
             <!-- seluruh isi dashboard -->
             <!-- Floating Animation Elements -->
@@ -62,10 +38,10 @@
                             <span class="text-3xl">🌾</span>
                         </div>
                         <h3 class="text-gray-800 text-2xl font-bold mb-2">
-                            👋 Selamat Datang di AgriMap Bantul!
+                            👋 Selamat Datang di TANDUR!
                         </h3>
                         <p class="text-gray-600 text-lg">
-                            Platform digital terdepan untuk pemetaan dan analisis pertanian di Kabupaten Bantul.
+                            Platform kolaboratif untuk pengelolaan lahan dan pemetaan partisipatif di Kalurahan Sabdodadi
                         </p>
                     </div>
 
@@ -156,7 +132,7 @@
                             ['icon' => '📍', 'label' => 'Jumlah RT', 'value' => $jumlahRT, 'color' => 'yellow'],
                             [
                                 'icon' => '🌱',
-                                'label' => 'Jenis Tanaman',
+                                'label' => 'Fasilitas dan Detail Tanaman',
                                 'value' => $jumlahTanaman,
                                 'color' => 'yellow',
                             ],
